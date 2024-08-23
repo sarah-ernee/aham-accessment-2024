@@ -7,6 +7,8 @@ from typing import List
 from dotenv import load_dotenv
 from pathlib import Path
 
+from pydantic import ValidationError
+
 from app.definitions import FundDetails
 import app.helper as helper
 
@@ -57,18 +59,16 @@ async def retrieve_all_funds() -> List[FundDetails]:
 
             fund_details = FundDetails(**dict)
 
-        except (KeyError, ValueError) as e:
-            logger.warning(f"Fund mapping does not match Pydantic base model")
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
-                            detail=f"Error in dict key-value pairs: {e}")
+        except ValidationError as e:
+            logger.warning(f"Pydantic validation error with mapped fund object")
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Failed to retrieve all funds: {e}")
         
         try:
             funds_list.append(fund_details)
         
         except Exception as e:
             logger.error(e)
-            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
-                                detail=f"Failed to retrieve all funds: {e}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to retrieve all funds: {e}")
 
     logger.info(f"Retrieved {len(funds_list)} number of funds from the system.")
     return funds_list
@@ -95,25 +95,24 @@ async def create_fund(fund: FundDetails) -> None:
     '''
     funds = helper.load_json(FILE_DIR)
 
-    if fund.id in funds:
+    # Check if the fund is already in DB or not
+    if any(f['id'] == fund.id for f in funds):
         logger.warning(f"Fund {fund.id} already exists in the system")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
-                            detail="Fund was not created to avoid duplication conflict")
-    
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Fund was not created to avoid duplication conflict")
+
     try: 
-        funds[fund.id] = fund.model_dump()
+        funds.append(fund.model_dump())
         helper.save_json(FILE_DIR, funds)
     
     except Exception as e:
         logger.error(e)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
-                            detail=f"Failed to create fund: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to create fund: {e}")
     
     logger.info(f"Fund created with id: {fund.id}")
     return {"message": "Successfully created new fund"}
 
 
-@app.get("/funds/{id}")
+@app.get("/get-one-fund/{id}")
 async def retrieve_specific_fund(id: str) -> FundDetails:
     '''
     Reads from JSON file to retrieve fund given the specified fund ID.
@@ -124,29 +123,29 @@ async def retrieve_specific_fund(id: str) -> FundDetails:
         - fund (dict): a dictionary containing fund details
     '''
     funds = helper.load_json(FILE_DIR)
+    specific_fund = None
 
     try:
-        fund = funds[id]
-    except KeyError:
-        logger.warning(f"Fund {id} was not found in the system")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
-                            detail="Failed to retrieve specific fund.")
+        # Exit for loop once specific fund is found
+        for fund in funds:
+            if fund["id"] == id:
+                specific_fund = fund 
+                break
+        
+        # Prompt if fund does not exist in DB
+        if specific_fund is None:
+            logger.warning(f"Fund {id} was not found in the system")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to retrieve specific fund.")
     
-    specific_fund = {
-        "id": fund["id"],
-        "fund_name": fund["fund_name"],
-        "manager_name": fund["manager_name"],
-        "desc": fund["desc"],
-        "net_asset": fund["net_asset"],
-        "created_at": fund["created_at"],
-        "performance": fund["performance"]
-    }
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to retrieve specific fund: {e}")
 
     logger.info(f"Fund {id} successfully retrieved")
     return specific_fund
 
 
-@app.patch("/funds/{id}")
+@app.patch("/update-fund/{id}")
 async def update_fund_performance(id: str, performance: float) -> None:
     '''
     Updates specific fund performance percentage with given fund id.
@@ -158,30 +157,35 @@ async def update_fund_performance(id: str, performance: float) -> None:
 
     funds = helper.load_json(FILE_DIR)
 
-    if id not in funds:
+    fund = None
+    for f in funds:
+        if f.get('id') == id:
+            fund = f
+            break
+
+    # Check if fund is in DB or not
+    if fund is None:
         logger.warning(f"Fund {id} was not found in the system")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
-                            detail="Failed to update fund performance.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to update fund performance.")
     
+    # Check if passed in performance is a valid percentage
     if not 0 <= performance <= 100:
         logger.warning(f"Performance cannot be updated to an invalid value of {performance}%")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                            detail="Failed to update fund performance.")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Failed to update fund performance.")
     
     try: 
-        funds[id]["performance"] = performance
+        fund["performance"] = performance
         helper.save_json(FILE_DIR, funds)
     
     except Exception as e:
         logger.error(e)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
-                            detail=f"Failed to update fund: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to update fund: {e}")
 
     logger.info(f"Fund {id} performance updated  to {performance}%")
     return {"message" : "Successfully updated fund performance"}
 
 
-@app.delete("/funds/{id}")
+@app.delete("/remove-fund/{id}")
 async def delete_fund(id: str) -> None:
     '''
     Deletes fund from fund investment database given fund ID.
@@ -191,19 +195,24 @@ async def delete_fund(id: str) -> None:
 
     funds = helper.load_json(FILE_DIR)
 
-    if id not in funds:
+    fund = None
+    for f in funds:
+        if f.get('id') == id:
+            fund = f
+            break
+
+    # Check if fund is in DB or not
+    if fund is None:
         logger.warning(f"Fund {id} was not found in the system")
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, 
-                            detail="Failed to delete fund.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to delete fund")
     
     try:
-        del funds[id]
+        funds.remove(fund)
         helper.save_json(FILE_DIR, funds)
 
     except Exception as e:
         logger.error(e)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
-                            detail=f"Failed to delete fund: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to delete fund: {e}")
 
     logger.info(f"Fund {id} has been removed from the system")
     return {"message": "Successfully deleted fund"}
