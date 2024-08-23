@@ -15,7 +15,7 @@ load_dotenv()
 FILE_DIR = os.getenv("JSON_PATH")
 
 # Set logging config
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename='app.log', filemode='a')
+logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s', filename='app.log', filemode='a')
 logger = logging.getLogger(__name__)
 
 
