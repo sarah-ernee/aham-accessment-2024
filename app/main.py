@@ -11,8 +11,12 @@ from app.definitions import FundDetails
 import app.helper as helper
 
 # Initialize environment variables
-load_dotenv()
-FILE_DIR = os.getenv("JSON_PATH")
+load_dotenv(dotenv_path=Path('app/.env'))
+json_file_name = os.getenv("JSON_PATH", "temp_db.json")
+FILE_DIR = Path.cwd() / json_file_name
+
+if not FILE_DIR:
+    raise ValueError("Failed to load JSON_PATH env var")
 
 # Set logging config
 logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s', filename='app.log', filemode='a')
@@ -23,7 +27,7 @@ app = FastAPI()
 
 # ------------------------------------ API Endpoints ----------------------------------------- #
 
-@app.get("/funds", status_code=status.HTTP_201_CREATED)
+@app.get("/get-funds", status_code=status.HTTP_201_CREATED)
 async def retrieve_all_funds() -> List[FundDetails]:
     '''
     Reads from JSON file to retrieve all funds.
@@ -34,9 +38,13 @@ async def retrieve_all_funds() -> List[FundDetails]:
     funds = helper.load_json(FILE_DIR)
     funds_list = []
 
+    if len(funds) == 0:
+        logger.warning("Fund database is currently empty")
+        return []
+
     for fund in funds.values():
         try:
-        # Explicit mapping of key-value pairs for better control
+            # Explicit mapping of key-value pairs for better control
             dict = {
                 "id": fund["id"],
                 "fund_name": fund["fund_name"],
@@ -66,34 +74,43 @@ async def retrieve_all_funds() -> List[FundDetails]:
     return funds_list
 
 
-@app.post("/funds")
+@app.post("/create-fund")
 async def create_fund(fund: FundDetails) -> None:
     '''
     Adds a new fund to the fund investment database.
 
     Args: 
         - fund (dict): a new fund object to append
+
+    Sample request body:
+        {
+            "id": "fund001",
+            "fund_name": "Global Equity Fund",
+            "manager_name": "John Doe",
+            "desc": "A diversified equity fund focusing on global markets.",
+            "net_asset": 1500000.75,
+            "created_at": "2024-08-22T14:30:00Z",
+            "performance": 7.5
+        }
     '''
     funds = helper.load_json(FILE_DIR)
 
-    if fund["id"] in funds:
+    if fund.id in funds:
         logger.warning(f"Fund {fund.id} already exists in the system")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, 
                             detail="Fund was not created to avoid duplication conflict")
     
     try: 
-        funds[fund["id"]] = fund.model_dump()
-
-        with open(Path(FILE_DIR), "w") as f:
-            json.dump(funds, f, default=str)
+        funds[fund.id] = fund.model_dump()
+        helper.save_json(FILE_DIR, funds)
     
     except Exception as e:
         logger.error(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
                             detail=f"Failed to create fund: {e}")
     
-    logger.info(f"Fund created with id: {fund["id"]}")
-    return {"message:" "Successfully created new fund"}
+    logger.info(f"Fund created with id: {fund.id}")
+    return {"message": "Successfully created new fund"}
 
 
 @app.get("/funds/{id}")
@@ -153,8 +170,7 @@ async def update_fund_performance(id: str, performance: float) -> None:
     
     try: 
         funds[id]["performance"] = performance
-        with open(Path(FILE_DIR), "w") as f:
-            json.dump(funds, f, default=str)
+        helper.save_json(FILE_DIR, funds)
     
     except Exception as e:
         logger.error(e)
@@ -182,8 +198,7 @@ async def delete_fund(id: str) -> None:
     
     try:
         del funds[id]
-        with open(Path(FILE_DIR), "w") as f:
-            json.dump(funds, f, default=str)
+        helper.save_json(FILE_DIR, funds)
 
     except Exception as e:
         logger.error(e)

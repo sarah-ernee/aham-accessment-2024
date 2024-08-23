@@ -1,0 +1,2 @@
+app.main - WARNING - Fund database is currently empty
+app.main - ERROR - list indices must be integers or slices, not str
