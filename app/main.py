@@ -149,22 +149,17 @@ async def retrieve_specific_fund(fund_id: str) -> FundDetails:
     funds = helper.load_json(FILE_DIR)
     specific_fund = None
 
-    try:
-        # Exit for loop once specific fund is found
-        for fund in funds:
-            if fund["fund_id"] == fund_id:
-                specific_fund = fund 
-                break
-        
-        # Prompt if fund does not exist in DB
-        if specific_fund is None:
-            logger.warning(f"Fund {fund_id} was not found in the system")
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to retrieve specific fund.")
+    # Exit for loop once specific fund is found
+    for fund in funds:
+        if fund["fund_id"] == fund_id:
+            specific_fund = fund 
+            break
     
-    except Exception as e:
-        logger.error(e)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to retrieve specific fund")
-
+    # Prompt if fund does not exist in DB
+    if specific_fund is None:
+        logger.warning(f"Fund {fund_id} was not found in the system")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to retrieve specific fund.")
+    
     logger.info(f"Fund {fund_id} successfully retrieved")
     return specific_fund
 

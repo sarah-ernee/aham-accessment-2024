@@ -21,16 +21,12 @@ WITH
 ;
 
 --- Account for non-nullable float values
-UPDATE 
-    temp_fund_data
+UPDATE temp_fund_data
 SET 
-    net_asset = COALESCE(NULLIF(net_asset, ''), 0),
-    performance = COALESCE(NULLIF(performance, ''), 0)
+    net_asset = COALESCE(NULLIF(net_asset::TEXT, '')::FLOAT, 0.0),
+    performance = COALESCE(NULLIF(performance::TEXT, '')::FLOAT, 0.0)
 WHERE 
-    net_asset IS NULL 
-    OR performance IS NULL 
-    OR net_asset = '' 
-    OR performance = ''
+    net_asset IS NULL OR performance IS NULL;
 ;
 
 --- Migrate parent table data first

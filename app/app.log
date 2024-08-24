@@ -2,3 +2,188 @@ app.main - WARNING - Fund Hall Equity Fund already exists in the system
 app.main - WARNING - Hall Equity Fund already exists in the system
 app.main - INFO - Retrieved 8 number of funds from the system.
 app.main - INFO - Fund fund008 successfully retrieved
+app.main - INFO - Retrieved 10 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - WARNING - Fund test002 already exists in the system
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 400 Bad Request"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 performance updated  to 8.0%
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 has been removed from the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 200 OK"
+app.main - WARNING - Fund test001 was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 500 Internal Server Error"
+app.main - INFO - Fund created with id: test001
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 10 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Retrieved 8 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Retrieved 8 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 9 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - WARNING - Fund test001 was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 500 Internal Server Error"
+app.main - WARNING - Fund test001 was not found in the system
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 404 Not Found"
+app.main - WARNING - Fund test001 was not found in the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 404 Not Found"
+app.main - INFO - Fund created with id: test001
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 10 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - WARNING - Fund test002 already exists in the system
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 400 Bad Request"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 performance updated  to 8.0%
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 has been removed from the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 200 OK"
+app.main - WARNING - Fund test001 was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 500 Internal Server Error"
+app.main - INFO - Fund created with id: test001
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 8 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 9 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - WARNING - Fund test001 was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 500 Internal Server Error"
+app.main - WARNING - Fund test001 was not found in the system
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 404 Not Found"
+app.main - WARNING - Fund test001 was not found in the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 404 Not Found"
+app.main - INFO - Fund created with id: test001
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 10 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - WARNING - Fund test002 already exists in the system
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 400 Bad Request"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 performance updated  to 8.0%
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 has been removed from the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 200 OK"
+app.main - WARNING - Fund test001 was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 500 Internal Server Error"
+app.main - INFO - Fund created with id: test001
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 1 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 2 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Retrieved 1 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 2 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Retrieved 1 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 2 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Retrieved 1 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 2 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 performance updated  to 8.0%
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 has been removed from the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 200 OK"
+app.main - WARNING - Fund test001 was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 500 Internal Server Error"
+app.main - WARNING - Fund test001 already exists in the system
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 400 Bad Request"
+app.main - WARNING - Fund nonexistent was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/nonexistent "HTTP/1.1 500 Internal Server Error"
+app.main - INFO - Retrieved 1 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 2 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 performance updated  to 8.0%
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 has been removed from the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 200 OK"
+app.main - WARNING - Fund test001 already exists in the system
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 400 Bad Request"
+app.main - WARNING - Fund nonexistent was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/nonexistent "HTTP/1.1 500 Internal Server Error"
+app.main - INFO - Retrieved 1 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 2 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 performance updated  to 8.0%
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 has been removed from the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 200 OK"
+app.main - WARNING - Fund test001 already exists in the system
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 400 Bad Request"
+app.main - WARNING - Fund nonexistent was not found in the system
+app.main - ERROR - 404: Failed to retrieve specific fund.
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/nonexistent "HTTP/1.1 500 Internal Server Error"
+app.main - INFO - Retrieved 1 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund created with id: test002
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 200 OK"
+app.main - INFO - Retrieved 2 number of funds from the system.
+httpx - INFO - HTTP Request: GET http://testserver/get-funds "HTTP/1.1 201 Created"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 performance updated  to 8.0%
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/test001?performance=8.0 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 successfully retrieved
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/test001 "HTTP/1.1 200 OK"
+app.main - INFO - Fund test001 has been removed from the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/test001 "HTTP/1.1 200 OK"
+app.main - WARNING - Fund test001 already exists in the system
+httpx - INFO - HTTP Request: POST http://testserver/create-fund "HTTP/1.1 400 Bad Request"
+app.main - WARNING - Fund nonexistent was not found in the system
+httpx - INFO - HTTP Request: GET http://testserver/get-one-fund/nonexistent "HTTP/1.1 404 Not Found"
+app.main - WARNING - Fund nonexistent was not found in the system
+httpx - INFO - HTTP Request: PATCH http://testserver/update-fund/nonexistent?performance=5.0 "HTTP/1.1 404 Not Found"
+app.main - WARNING - Fund nonexistent was not found in the system
+httpx - INFO - HTTP Request: DELETE http://testserver/remove-fund/nonexistent "HTTP/1.1 404 Not Found"
