@@ -36,6 +36,19 @@ async def retrieve_all_funds() -> List[FundDetails]:
 
     Returns: 
         - funds_list (list): a list of dictionaries containing fund details
+
+    Sample return:
+    [
+        {
+            "id": "fund001",
+            "fund_name": "Global Equity Fund",
+            "manager_name": "John Doe",
+            "desc": "A diversified equity fund focusing on global markets.",
+            "net_asset": 1500000.75,
+            "created_at": "2024-08-22T14:30:00Z",
+            "performance": 7.5
+        }
+    ]
     '''
     funds = helper.load_json(FILE_DIR)
     funds_list = []
@@ -44,7 +57,7 @@ async def retrieve_all_funds() -> List[FundDetails]:
         logger.warning("Fund database is currently empty")
         return []
 
-    for fund in funds.values():
+    for fund in funds:
         try:
             # Explicit mapping of key-value pairs for better control
             dict = {
@@ -73,7 +86,7 @@ async def retrieve_all_funds() -> List[FundDetails]:
     logger.info(f"Retrieved {len(funds_list)} number of funds from the system.")
     return funds_list
 
-
+# need to make sure it's not the same name too?
 @app.post("/create-fund")
 async def create_fund(fund: FundDetails) -> None:
     '''
@@ -121,6 +134,17 @@ async def retrieve_specific_fund(id: str) -> FundDetails:
         - id (str): fund ID identifier
     Returns: 
         - fund (dict): a dictionary containing fund details
+
+    Sample return:
+        {
+            "id": "fund001",
+            "fund_name": "Global Equity Fund",
+            "manager_name": "John Doe",
+            "desc": "A diversified equity fund focusing on global markets.",
+            "net_asset": 1500000.75,
+            "created_at": "2024-08-22T14:30:00Z",
+            "performance": 7.5
+        }
     '''
     funds = helper.load_json(FILE_DIR)
     specific_fund = None
