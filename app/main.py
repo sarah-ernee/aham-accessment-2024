@@ -21,7 +21,7 @@ if not FILE_DIR:
     raise ValueError("Failed to load JSON_PATH env var")
 
 # Set logging config
-logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s', filename='app.log', filemode='a')
+logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s', filename='app/app.log', filemode='a')
 logger = logging.getLogger(__name__)
 
 
@@ -40,7 +40,7 @@ async def retrieve_all_funds() -> List[FundDetails]:
     Sample return:
     [
         {
-            "id": "fund001",
+            "fund_id": "fund001",
             "fund_name": "Global Equity Fund",
             "manager_name": "John Doe",
             "desc": "A diversified equity fund focusing on global markets.",
@@ -61,7 +61,7 @@ async def retrieve_all_funds() -> List[FundDetails]:
         try:
             # Explicit mapping of key-value pairs for better control
             dict = {
-                "id": fund["id"],
+                "fund_id": fund["fund_id"],
                 "fund_name": fund["fund_name"],
                 "manager_name": fund["manager_name"],
                 "desc": fund["desc"],
@@ -86,7 +86,6 @@ async def retrieve_all_funds() -> List[FundDetails]:
     logger.info(f"Retrieved {len(funds_list)} number of funds from the system.")
     return funds_list
 
-# need to make sure it's not the same name too?
 @app.post("/create-fund")
 async def create_fund(fund: FundDetails) -> None:
     '''
@@ -97,7 +96,7 @@ async def create_fund(fund: FundDetails) -> None:
 
     Sample request body:
         {
-            "id": "fund001",
+            "fund_id": "fund001",
             "fund_name": "Global Equity Fund",
             "manager_name": "John Doe",
             "desc": "A diversified equity fund focusing on global markets.",
@@ -109,8 +108,13 @@ async def create_fund(fund: FundDetails) -> None:
     funds = helper.load_json(FILE_DIR)
 
     # Check if the fund is already in DB or not
-    if any(f['id'] == fund.id for f in funds):
-        logger.warning(f"Fund {fund.id} already exists in the system")
+    if any(f['fund_id'] == fund.fund_id for f in funds):
+        logger.warning(f"Fund {fund.fund_id} already exists in the system")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Fund was not created due to ID conflict")
+    
+    # Avoid same fund name being created even if ID is different
+    if any(f['fund_name'] == fund.fund_name for f in funds):
+        logger.warning(f"{fund.fund_name} already exists in the system")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Fund was not created to avoid duplication conflict")
 
     try: 
@@ -121,23 +125,23 @@ async def create_fund(fund: FundDetails) -> None:
         logger.error(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to create fund: {e}")
     
-    logger.info(f"Fund created with id: {fund.id}")
+    logger.info(f"Fund created with id: {fund.fund_id}")
     return {"message": "Successfully created new fund"}
 
 
-@app.get("/get-one-fund/{id}")
-async def retrieve_specific_fund(id: str) -> FundDetails:
+@app.get("/get-one-fund/{fund_id}")
+async def retrieve_specific_fund(fund_id: str) -> FundDetails:
     '''
     Reads from JSON file to retrieve fund given the specified fund ID.
 
     Args: 
-        - id (str): fund ID identifier
+        - fund_id (str): fund ID identifier
     Returns: 
         - fund (dict): a dictionary containing fund details
 
     Sample return:
         {
-            "id": "fund001",
+            "fund_id": "fund001",
             "fund_name": "Global Equity Fund",
             "manager_name": "John Doe",
             "desc": "A diversified equity fund focusing on global markets.",
@@ -152,30 +156,30 @@ async def retrieve_specific_fund(id: str) -> FundDetails:
     try:
         # Exit for loop once specific fund is found
         for fund in funds:
-            if fund["id"] == id:
+            if fund["fund_id"] == fund_id:
                 specific_fund = fund 
                 break
         
         # Prompt if fund does not exist in DB
         if specific_fund is None:
-            logger.warning(f"Fund {id} was not found in the system")
+            logger.warning(f"Fund {fund_id} was not found in the system")
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to retrieve specific fund.")
     
     except Exception as e:
         logger.error(e)
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to retrieve specific fund: {e}")
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to retrieve specific fund")
 
-    logger.info(f"Fund {id} successfully retrieved")
+    logger.info(f"Fund {fund_id} successfully retrieved")
     return specific_fund
 
 
-@app.patch("/update-fund/{id}")
-async def update_fund_performance(id: str, performance: float) -> None:
+@app.patch("/update-fund/{fund_id}")
+async def update_fund_performance(fund_id: str, performance: float) -> None:
     '''
     Updates specific fund performance percentage with given fund id.
 
     Args:
-        - id (str): fund ID identifier
+        - fund_id (str): fund ID identifier
         - performance (float): fund performance value
     '''
 
@@ -183,13 +187,13 @@ async def update_fund_performance(id: str, performance: float) -> None:
 
     fund = None
     for f in funds:
-        if f.get('id') == id:
+        if f.get('fund_id') == fund_id:
             fund = f
             break
 
     # Check if fund is in DB or not
     if fund is None:
-        logger.warning(f"Fund {id} was not found in the system")
+        logger.warning(f"Fund {fund_id} was not found in the system")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to update fund performance.")
     
     # Check if passed in performance is a valid percentage
@@ -205,29 +209,29 @@ async def update_fund_performance(id: str, performance: float) -> None:
         logger.error(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to update fund: {e}")
 
-    logger.info(f"Fund {id} performance updated  to {performance}%")
+    logger.info(f"Fund {fund_id} performance updated  to {performance}%")
     return {"message" : "Successfully updated fund performance"}
 
 
-@app.delete("/remove-fund/{id}")
-async def delete_fund(id: str) -> None:
+@app.delete("/remove-fund/{fund_id}")
+async def delete_fund(fund_id: str) -> None:
     '''
     Deletes fund from fund investment database given fund ID.
     Args:
-        - id (str): fund ID identifier    
+        - fund_id (str): fund ID identifier    
     '''
 
     funds = helper.load_json(FILE_DIR)
 
     fund = None
     for f in funds:
-        if f.get('id') == id:
+        if f.get('fund_id') == fund_id:
             fund = f
             break
 
     # Check if fund is in DB or not
     if fund is None:
-        logger.warning(f"Fund {id} was not found in the system")
+        logger.warning(f"Fund {fund_id} was not found in the system")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Failed to delete fund")
     
     try:
@@ -238,5 +242,5 @@ async def delete_fund(id: str) -> None:
         logger.error(e)
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to delete fund: {e}")
 
-    logger.info(f"Fund {id} has been removed from the system")
+    logger.info(f"Fund {fund_id} has been removed from the system")
     return {"message": "Successfully deleted fund"}

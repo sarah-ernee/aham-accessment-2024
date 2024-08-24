@@ -14,7 +14,7 @@ CREATE TABLE fund IF NOT EXISTS (
   fund_name text NOT NULL,
   desc text,
   net_asset float NOT NULL,
-  created_at timestamp NOT NULL DEFAULT (now()),
+  created_at timestamp without time zone NOT NULL DEFAULT (now()),
   performance float NOT NULL,
   manager_id int,
   PRIMARY KEY (id),
