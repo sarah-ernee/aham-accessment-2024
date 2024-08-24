@@ -1,0 +1,9 @@
+fund_id,fund_name,manager_name,desc,net_asset,created_at,performance
+fund001,Global Equity Fund,John Doe,A diversified equity fund focusing on global markets.,1500000.75,2024-08-22 14:30:00+00:00,83.4
+fund002,Core Income Fund,John Doe,A fund to provide unit holders with stable income.,1500000.75,2024-08-22 14:30:00+00:00,7.5
+fund003,Sectors Index Fund,John Doe,A specified fund focusing on certain sectors.,1500000.75,2024-08-22 14:30:00+00:00,7.5
+fund004,Small Cap Opportunities Fund,John Doe,A Shariah-compliant equity fund.,1500000.75,2024-08-22 14:30:00+00:00,7.5
+fund005,Emerging Markets Growth Fund,John Doe,A high-growth fund for emerging market players.,1500000.75,2024-08-22 14:30:00+00:00,7.5
+fund006,Technology Innovators Fund,John Doe,A tech-industry dedicated fund for innovation.,1500000.75,2024-08-22 14:30:00+00:00,7.5
+fund007,Sustainable Future Fund,Alex Maxwell,A fund targetting ESG-focused companies.,1500000.75,2024-08-22 14:30:00+00:00,30.1
+fund008,Hall Equity Fund,Donna Johnson,A diversified equity fund focusing on global markets.,1500000.75,2024-08-22 14:30:00+00:00,30.1

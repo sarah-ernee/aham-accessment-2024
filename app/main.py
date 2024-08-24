@@ -14,11 +14,7 @@ import app.helper as helper
 
 # Initialize environment variables
 load_dotenv(dotenv_path=Path('app/.env'))
-json_file_name = os.getenv("JSON_PATH", "temp_db.json")
-FILE_DIR = Path.cwd() / json_file_name
-
-if not FILE_DIR:
-    raise ValueError("Failed to load JSON_PATH env var")
+FILE_DIR = Path.cwd() / "temp_db.json"
 
 # Set logging config
 logging.basicConfig(level=logging.INFO, format='%(name)s - %(levelname)s - %(message)s', filename='app/app.log', filemode='a')
