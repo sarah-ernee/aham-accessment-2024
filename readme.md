@@ -28,5 +28,5 @@ REST APIs are designed using FastAPI framework. Error handling is done with the 
 2. Create a Conda or virtual environment before running Python code.
 3. Within the environment, run `pip install -r app/requirements.txt`.
 4. Start uvicorn server with `uvicorn app.main:app --reload` to interact with APIs in Postman or /docs.
-5.
+5. To run `migrate.sql`, you can use `\i` or copy pasting into CMD Prompt. `COPY` statement uses absolute path so make sure to plug in your own path to the CSV file.
 
