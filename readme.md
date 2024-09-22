@@ -1,8 +1,8 @@
-## Fund Investment CRUD APIs
+# Fund Investment CRUD APIs
 
 REST APIs are designed using FastAPI framework. Error handling is done with the utilization of logging and HTTPException.
 
-# Repository Structure
+## Repository Structure
 
 ```bash
 .
